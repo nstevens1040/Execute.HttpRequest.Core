@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Class1.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="lib\Interop.MSHTML.dll" />
+    <None Remove="lib\Microsoft.AspNetCore.StaticFiles.dll" />
+    <None Remove="lib\Microsoft.AspNetCore.StaticFiles.xml" />
+    <None Remove="lib\mshtml.dll" />
+    <None Remove="lib\mshtml.tlb" />
+    <None Remove="lib\System.Web.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="lib\Interop.MSHTML.dll" />
+    <EmbeddedResource Include="lib\Microsoft.AspNetCore.StaticFiles.dll" />
+    <EmbeddedResource Include="lib\mshtml.tlb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Interop.MSHTML">
+      <HintPath>lib\Interop.MSHTML.dll</HintPath>
+      <Private>false</Private>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.StaticFiles">
+      <HintPath>lib\Microsoft.AspNetCore.StaticFiles.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>
