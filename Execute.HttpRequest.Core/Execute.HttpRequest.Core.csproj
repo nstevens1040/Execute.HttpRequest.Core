@@ -27,7 +27,6 @@
     <Reference Include="Interop.MSHTML">
       <HintPath>lib\Interop.MSHTML.dll</HintPath>
       <Private>false</Private>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.StaticFiles">
       <HintPath>lib\Microsoft.AspNetCore.StaticFiles.dll</HintPath>
