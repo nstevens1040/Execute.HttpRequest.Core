@@ -13,8 +13,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Reflection;
 using System.Web;
-using Microsoft.AspNetCore.StaticFiles;
-using MSHTML;
+using MimeKit;
+using HtmlAgilityPack;
 namespace Execute
 {
     public class RetObject
@@ -34,7 +34,7 @@ namespace Execute
             get;
             set;
         }
-        public HTMLDocument HtmlDocument
+        public HtmlDocument HtmlDocument
         {
             get;
             set;
@@ -49,7 +49,7 @@ namespace Execute
     {
         public void Ctor()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            System.AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             {
                 string resourceName = new AssemblyName(args.Name).Name + ".dll";
                 string resource = Array.Find(this.GetType().Assembly.GetManifestResourceNames(), element => element.EndsWith(resourceName));
@@ -61,13 +61,11 @@ namespace Execute
                 }
             };
         }
-        private static HTMLDocument DOMParser(string responseText)
+        private static HtmlDocument DOMParser(string responseText)
         {
-            HTMLDocument domobj = new HTMLDocument();
-            IHTMLDocument2 doc2 = (IHTMLDocument2)domobj;
-            doc2.write(new object[] { responseText });
-            doc2.close();
-            return domobj;
+            HtmlDocument htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(responseText);
+            return htmlDoc;
         }
         private static CookieCollection SetCookieParser(List<string> setCookie, CookieCollection cooks, CookieCollection initCookies)
         {
@@ -263,7 +261,7 @@ namespace Execute
             CookieCollection rCookies = new CookieCollection();
             List<string> setCookieValue = new List<string>();
             CookieContainer coo = new CookieContainer();
-            dynamic dom = new object();
+            HtmlDocument dom;
             string htmlString = String.Empty;
             if (method == null)
             {
@@ -496,9 +494,7 @@ namespace Execute
                                 {
                                     if (File.Exists(filepath))
                                     {
-                                        FileExtensionContentTypeProvider MimeMapping = new FileExtensionContentTypeProvider();
-                                        string mime = String.Empty;
-                                        MimeMapping.TryGetContentType(filepath, out mime);
+                                        string mime = MimeKit.MimeTypes.GetMimeType(filepath);
                                         ByteArrayContent bac = new ByteArrayContent(File.ReadAllBytes(filepath));
                                         bac.Headers.Add("Content-Type", mime);
                                         bac.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("attachment");
@@ -570,9 +566,7 @@ namespace Execute
                                 {
                                     if (File.Exists(filepath))
                                     {
-                                        FileExtensionContentTypeProvider MimeMapping = new FileExtensionContentTypeProvider();
-                                        string mime = String.Empty;
-                                        MimeMapping.TryGetContentType(filepath, out mime);
+                                        string mime = MimeKit.MimeTypes.GetMimeType(filepath);
                                         ByteArrayContent bac = new ByteArrayContent(File.ReadAllBytes(filepath));
                                         bac.Headers.Add("Content-Type", mime);
                                         bac.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("attachment");
@@ -697,7 +691,6 @@ namespace Execute
                         dom = DOMParser(htmlString);
                         retObj.HtmlDocument = dom;
                     }
-                    retObj.HtmlDocument = dom;
                     retObj.HttpResponseHeaders = httpResponseHeaders;
                     retObj.HttpResponseMessage = res;
                     break;

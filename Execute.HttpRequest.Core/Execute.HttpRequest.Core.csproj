@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,28 +9,44 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="lib\Interop.MSHTML.dll" />
-    <None Remove="lib\Microsoft.AspNetCore.StaticFiles.dll" />
+    <None Remove="lib\HtmlAgilityPack.dll" />
+    <None Remove="lib\HtmlAgilityPack.pdb" />
+    <None Remove="lib\HtmlAgilityPack.XML" />
     <None Remove="lib\Microsoft.AspNetCore.StaticFiles.xml" />
+    <None Remove="lib\MimeKit.dll" />
+    <None Remove="lib\MimeKit.pdb" />
+    <None Remove="lib\MimeKit.xml" />
     <None Remove="lib\mshtml.dll" />
-    <None Remove="lib\mshtml.tlb" />
+    <None Remove="lib\System.Runtime.dll" />
     <None Remove="lib\System.Web.dll" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="lib\Interop.MSHTML.dll" />
-    <EmbeddedResource Include="lib\Microsoft.AspNetCore.StaticFiles.dll" />
-    <EmbeddedResource Include="lib\mshtml.tlb" />
+    <EmbeddedResource Include="lib\HtmlAgilityPack.dll" />
+    <EmbeddedResource Include="lib\HtmlAgilityPack.pdb" />
+    <EmbeddedResource Include="lib\HtmlAgilityPack.XML" />
+    <EmbeddedResource Include="lib\MimeKit.dll" />
+    <EmbeddedResource Include="lib\MimeKit.pdb" />
+    <EmbeddedResource Include="lib\MimeKit.xml" />
+    <EmbeddedResource Include="lib\System.Runtime.dll" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Interop.MSHTML">
-      <HintPath>lib\Interop.MSHTML.dll</HintPath>
-      <Private>false</Private>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>lib\HtmlAgilityPack.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Microsoft.AspNetCore.StaticFiles">
-      <HintPath>lib\Microsoft.AspNetCore.StaticFiles.dll</HintPath>
-      <Private>false</Private>
+    <Reference Include="MimeKit">
+      <HintPath>lib\MimeKit.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System.Runtime">
+      <HintPath>lib\System.Runtime.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
+      <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
   </ItemGroup>
 
