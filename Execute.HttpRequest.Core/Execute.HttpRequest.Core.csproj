@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,9 +15,7 @@
     <None Remove="lib\Microsoft.AspNetCore.StaticFiles.xml" />
     <None Remove="lib\MimeKit.dll" />
     <None Remove="lib\MimeKit.pdb" />
-    <None Remove="lib\MimeKit.xml" />
     <None Remove="lib\mshtml.dll" />
-    <None Remove="lib\System.Runtime.dll" />
     <None Remove="lib\System.Web.dll" />
   </ItemGroup>
 
@@ -26,9 +24,6 @@
     <EmbeddedResource Include="lib\HtmlAgilityPack.pdb" />
     <EmbeddedResource Include="lib\HtmlAgilityPack.XML" />
     <EmbeddedResource Include="lib\MimeKit.dll" />
-    <EmbeddedResource Include="lib\MimeKit.pdb" />
-    <EmbeddedResource Include="lib\MimeKit.xml" />
-    <EmbeddedResource Include="lib\System.Runtime.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,14 +34,6 @@
     </Reference>
     <Reference Include="MimeKit">
       <HintPath>lib\MimeKit.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="System.Runtime">
-      <HintPath>lib\System.Runtime.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-      <Private>False</Private>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
   </ItemGroup>
 
