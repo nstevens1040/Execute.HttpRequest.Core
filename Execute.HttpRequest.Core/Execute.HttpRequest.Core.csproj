@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <None Remove="lib\HtmlAgilityPack.dll" />
-    <None Remove="lib\HtmlAgilityPack.pdb" />
     <None Remove="lib\HtmlAgilityPack.XML" />
     <None Remove="lib\Microsoft.AspNetCore.StaticFiles.xml" />
     <None Remove="lib\MimeKit.dll" />
@@ -37,7 +36,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="lib\HtmlAgilityPack.dll" />
-    <EmbeddedResource Include="lib\HtmlAgilityPack.pdb" />
     <EmbeddedResource Include="lib\HtmlAgilityPack.XML" />
     <EmbeddedResource Include="lib\MimeKit.dll" />
   </ItemGroup>
