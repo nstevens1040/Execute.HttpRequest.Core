@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net;
-using System.Collections;
-using System.Text.RegularExpressions;
-using System.IO;
-using System.IO.Compression;
-using System.Reflection;
-using System.Web;
-using MimeKit;
-using HtmlAgilityPack;
-namespace Execute
+﻿namespace Execute
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.Specialized;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.Net;
+    using System.Collections;
+    using System.Text.RegularExpressions;
+    using System.IO;
+    using System.IO.Compression;
+    using System.Reflection;
+    using HtmlAgilityPack;
     public class RetObject
     {
         public string ResponseText
@@ -47,7 +45,7 @@ namespace Execute
     }
     public class Utils
     {
-        public void Ctor()
+        public Utils()
         {
             System.AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             {
@@ -253,412 +251,85 @@ namespace Execute
         }
         public async Task<RetObject> SendHttp(string uri, HttpMethod method = null, OrderedDictionary headers = null, CookieCollection cookies = null, string contentType = null, string body = null, string filepath = null)
         {
-            byte[] reStream;
-            RetObject retObj = new RetObject();
-            HttpResponseMessage res = new HttpResponseMessage();
-            OrderedDictionary httpResponseHeaders = new OrderedDictionary();
-            CookieCollection responseCookies;
-            CookieCollection rCookies = new CookieCollection();
-            List<string> setCookieValue = new List<string>();
-            CookieContainer coo = new CookieContainer();
-            HtmlDocument dom;
-            string htmlString = String.Empty;
-            if (method == null)
+            return await Task.Run(async () =>
             {
-                method = HttpMethod.Get;
-            }
-            HttpClientHandler handle = new HttpClientHandler()
-            {
-                AutomaticDecompression = (DecompressionMethods)1 & (DecompressionMethods)2,
-                UseProxy = false,
-                AllowAutoRedirect = true,
-                MaxAutomaticRedirections = Int32.MaxValue,
-                MaxConnectionsPerServer = Int32.MaxValue,
-                MaxResponseHeadersLength = Int32.MaxValue,
-                SslProtocols = System.Security.Authentication.SslProtocols.Tls12
-            };
-            HttpClient client = new HttpClient(handle);
-            if (!client.DefaultRequestHeaders.Contains("User-Agent"))
-            {
-                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36");
-            }
-            client.DefaultRequestHeaders.Add("Path", (new Uri(uri).PathAndQuery));
-            List<string> headersToSkip = new List<string>();
-            headersToSkip.Add("Accept");
-            headersToSkip.Add("pragma");
-            headersToSkip.Add("Cache-Control");
-            headersToSkip.Add("Date");
-            headersToSkip.Add("Content-Length");
-            headersToSkip.Add("Content-Type");
-            headersToSkip.Add("Expires");
-            headersToSkip.Add("Last-Modified");
-            if (headers != null)
-            {
-                headersToSkip.ForEach((i) => {
-                    headers.Remove(i);
-                });
-                IEnumerator enume = headers.Keys.GetEnumerator();
-                while (enume.MoveNext())
+                byte[] reStream;
+                RetObject retObj = new RetObject();
+                HttpResponseMessage res = new HttpResponseMessage();
+                OrderedDictionary httpResponseHeaders = new OrderedDictionary();
+                CookieCollection responseCookies;
+                CookieCollection rCookies = new CookieCollection();
+                List<string> setCookieValue = new List<string>();
+                CookieContainer coo = new CookieContainer();
+                HtmlDocument dom;
+                string htmlString = String.Empty;
+                if (method == null)
                 {
-                    string key = enume.Current.ToString();
-                    string value = String.Join("\n", headers[key]);
-                    if (client.DefaultRequestHeaders.Contains(key))
+                    method = HttpMethod.Get;
+                }
+                HttpClientHandler handle = new HttpClientHandler()
+                {
+                    AutomaticDecompression = (DecompressionMethods)1 & (DecompressionMethods)2,
+                    UseProxy = false,
+                    AllowAutoRedirect = true,
+                    MaxAutomaticRedirections = Int32.MaxValue,
+                    MaxConnectionsPerServer = Int32.MaxValue,
+                    MaxResponseHeadersLength = Int32.MaxValue,
+                    SslProtocols = System.Security.Authentication.SslProtocols.Tls12
+                };
+                HttpClient client = new HttpClient(handle);
+                if (!client.DefaultRequestHeaders.Contains("User-Agent"))
+                {
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36");
+                }
+                client.DefaultRequestHeaders.Add("Path", (new Uri(uri).PathAndQuery));
+                List<string> headersToSkip = new List<string>();
+                headersToSkip.Add("Accept");
+                headersToSkip.Add("pragma");
+                headersToSkip.Add("Cache-Control");
+                headersToSkip.Add("Date");
+                headersToSkip.Add("Content-Length");
+                headersToSkip.Add("Content-Type");
+                headersToSkip.Add("Expires");
+                headersToSkip.Add("Last-Modified");
+                if (headers != null)
+                {
+                    headersToSkip.ForEach((i) => {
+                        headers.Remove(i);
+                    });
+                    IEnumerator enume = headers.Keys.GetEnumerator();
+                    while (enume.MoveNext())
                     {
-                        client.DefaultRequestHeaders.Remove(key);
-                    }
-                    try
-                    {
-                        client.DefaultRequestHeaders.Add(key, value);
-                    }
-                    catch
-                    {
-                        client.DefaultRequestHeaders.TryAddWithoutValidation(key, value);
+                        string key = enume.Current.ToString();
+                        string value = String.Join("\n", headers[key]);
+                        if (client.DefaultRequestHeaders.Contains(key))
+                        {
+                            client.DefaultRequestHeaders.Remove(key);
+                        }
+                        try
+                        {
+                            client.DefaultRequestHeaders.Add(key, value);
+                        }
+                        catch
+                        {
+                            client.DefaultRequestHeaders.TryAddWithoutValidation(key, value);
+                        }
                     }
                 }
-            }
-            if (cookies != null)
-            {
-                IEnumerator cnume = cookies.GetEnumerator();
-                while (cnume.MoveNext())
+                if (cookies != null)
                 {
-                    Cookie cook = (Cookie)cnume.Current;
-                    coo.Add(cook);
+                    IEnumerator cnume = cookies.GetEnumerator();
+                    while (cnume.MoveNext())
+                    {
+                        Cookie cook = (Cookie)cnume.Current;
+                        coo.Add(cook);
+                    }
+                    handle.CookieContainer = coo;
                 }
-                handle.CookieContainer = coo;
-            }
-            bool except = false;
-            switch (method.ToString())
-            {
-                case "DELETE":
-                    res = await client.SendAsync((new HttpRequestMessage(method, uri)));
-                    if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
-                    {
-                        reStream = res.Content.ReadAsByteArrayAsync().Result;
-                        htmlString = Unzip(reStream);
-                    }
-                    else
-                    {
-                        htmlString = res.Content.ReadAsStringAsync().Result;
-                    }
-                    try
-                    {
-                        setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
-                    }
-                    catch
-                    { }
-                    res.Headers.ToList().ForEach((i) =>
-                    {
-                        httpResponseHeaders.Add(i.Key, i.Value);
-                    });
-                    res.Content.Headers.ToList().ForEach((i) =>
-                    {
-                        httpResponseHeaders.Add(i.Key, i.Value);
-                    });
-                    responseCookies = handle.CookieContainer.GetCookies(new Uri(uri));
-                    rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
-                    if (!String.IsNullOrEmpty(htmlString))
-                    {
-                        dom = DOMParser(htmlString);
-                        retObj.HtmlDocument = dom;
-                    }
-                    retObj.HttpResponseHeaders = httpResponseHeaders;
-                    retObj.HttpResponseMessage = res;
-                    break;
-                case "GET":
-                    res = await client.SendAsync((new HttpRequestMessage(method, uri)));
-                    if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
-                    {
-                        reStream = res.Content.ReadAsByteArrayAsync().Result;
-                        htmlString = Unzip(reStream);
-                    }
-                    else
-                    {
-                        try
-                        {
-                            htmlString = res.Content.ReadAsStringAsync().Result;
-                        }
-                        catch
-                        {
-                            except = true;
-                        }
-                        if (except)
-                        {
-                            var responseStream = await res.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                            using (var sr = new StreamReader(responseStream, Encoding.UTF8))
-                            {
-                                htmlString = await sr.ReadToEndAsync().ConfigureAwait(false);
-                            }
-                        }
-
-                    }
-                    try
-                    {
-                        setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
-                    }
-                    catch
-                    { }
-                    res.Headers.ToList().ForEach((i) =>
-                    {
-                        httpResponseHeaders.Add(i.Key, i.Value);
-                    });
-                    res.Content.Headers.ToList().ForEach((i) =>
-                    {
-                        httpResponseHeaders.Add(i.Key, i.Value);
-                    });
-                    responseCookies = handle.CookieContainer.GetCookies(new Uri(uri));
-                    rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
-                    if (!String.IsNullOrEmpty(htmlString))
-                    {
-                        dom = DOMParser(htmlString);
-                        retObj.HtmlDocument = dom;
-                    }
-                    retObj.HttpResponseHeaders = httpResponseHeaders;
-                    retObj.HttpResponseMessage = res;
-                    break;
-                case "HEAD":
-                    res = await client.SendAsync((new HttpRequestMessage(method, uri)));
-                    try
-                    {
-                        setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
-                    }
-                    catch
-                    { }
-                    res.Headers.ToList().ForEach((i) =>
-                    {
-                        httpResponseHeaders.Add(i.Key, i.Value);
-                    });
-                    res.Content.Headers.ToList().ForEach((i) =>
-                    {
-                        httpResponseHeaders.Add(i.Key, i.Value);
-                    });
-                    responseCookies = handle.CookieContainer.GetCookies(new Uri(uri));
-                    rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
-                    retObj.HttpResponseHeaders = httpResponseHeaders;
-                    retObj.HttpResponseMessage = res;
-                    break;
-                case "OPTIONS":
-                    res = await client.SendAsync((new HttpRequestMessage(method, uri)));
-                    if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
-                    {
-                        reStream = res.Content.ReadAsByteArrayAsync().Result;
-                        htmlString = Unzip(reStream);
-                    }
-                    else
-                    {
-                        htmlString = res.Content.ReadAsStringAsync().Result;
-                    }
-                    try
-                    {
-                        setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
-                    }
-                    catch
-                    { }
-                    res.Headers.ToList().ForEach((i) =>
-                    {
-                        httpResponseHeaders.Add(i.Key, i.Value);
-                    });
-                    res.Content.Headers.ToList().ForEach((i) =>
-                    {
-                        httpResponseHeaders.Add(i.Key, i.Value);
-                    });
-                    responseCookies = handle.CookieContainer.GetCookies(new Uri(uri));
-                    rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
-                    if (!String.IsNullOrEmpty(htmlString))
-                    {
-                        dom = DOMParser(htmlString);
-                        retObj.HtmlDocument = dom;
-                    }
-                    retObj.HttpResponseHeaders = httpResponseHeaders;
-                    retObj.HttpResponseMessage = res;
-                    break;
-                case "POST":
-                    if (String.IsNullOrEmpty(contentType))
-                    {
-                        contentType = "application/x-www-form-urlencoded";
-                    }
-                    if (!String.IsNullOrEmpty(body))
-                    {
-                        switch (contentType)
-                        {
-                            case @"application/x-www-form-urlencoded":
-                                res = await client.SendAsync(
-                                    (new HttpRequestMessage(method, uri)
-                                    {
-                                        Content = (new StringContent(body, Encoding.UTF8, contentType))
-                                    })
-                                );
-                                break;
-                            case @"multipart/form-data":
-                                MultipartFormDataContent mpc = new MultipartFormDataContent("Boundary----" + DateTime.Now.Ticks.ToString("x"));
-                                if (!String.IsNullOrEmpty(filepath))
-                                {
-                                    if (File.Exists(filepath))
-                                    {
-                                        string mime = MimeKit.MimeTypes.GetMimeType(filepath);
-                                        ByteArrayContent bac = new ByteArrayContent(File.ReadAllBytes(filepath));
-                                        bac.Headers.Add("Content-Type", mime);
-                                        bac.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("attachment");
-                                        bac.Headers.ContentDisposition.Name = "file";
-                                        bac.Headers.ContentDisposition.FileName = new FileInfo(filepath).Name;
-                                        mpc.Add(bac, new FileInfo(filepath).Name);
-                                    }
-                                }
-                                if (!String.IsNullOrEmpty(body))
-                                {
-                                    StringContent sc = new StringContent(body, Encoding.UTF8, @"application/x-www-form-urlencoded");
-                                    mpc.Add(sc);
-                                }
-                                res = await client.SendAsync(
-                                    (new HttpRequestMessage(method, uri)
-                                    {
-                                        Content = mpc
-                                    })
-                                );
-                                break;
-                            default:
-                                res = await client.SendAsync(
-                                    (new HttpRequestMessage(method, uri)
-                                    {
-                                        Content = (new StringContent(body, Encoding.UTF8, contentType))
-                                    })
-                                );
-                                break;
-                        }
-                        if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
-                        {
-                            reStream = res.Content.ReadAsByteArrayAsync().Result;
-                            htmlString = Unzip(reStream);
-                        }
-                        else
-                        {
-                            htmlString = res.Content.ReadAsStringAsync().Result;
-                        }
-                        try
-                        {
-                            setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
-                        }
-                        catch
-                        { }
-                        res.Headers.ToList().ForEach((i) =>
-                        {
-                            httpResponseHeaders.Add(i.Key, i.Value);
-                        });
-                        res.Content.Headers.ToList().ForEach((i) =>
-                        {
-                            httpResponseHeaders.Add(i.Key, i.Value);
-                        });
-                    }
-                    else
-                    {
-                        switch (contentType)
-                        {
-                            case @"application/x-www-form-urlencoded":
-                                res = await client.SendAsync(
-                                    (new HttpRequestMessage(method, uri)
-                                    {
-                                        Content = (new StringContent(String.Empty, Encoding.UTF8, contentType))
-                                    })
-                                );
-                                break;
-                            case @"multipart/form-data":
-                                MultipartFormDataContent mpc = new MultipartFormDataContent("Boundary----" + DateTime.Now.Ticks.ToString("x"));
-                                if (!String.IsNullOrEmpty(filepath))
-                                {
-                                    if (File.Exists(filepath))
-                                    {
-                                        string mime = MimeKit.MimeTypes.GetMimeType(filepath);
-                                        ByteArrayContent bac = new ByteArrayContent(File.ReadAllBytes(filepath));
-                                        bac.Headers.Add("Content-Type", mime);
-                                        bac.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("attachment");
-                                        bac.Headers.ContentDisposition.Name = "file";
-                                        bac.Headers.ContentDisposition.FileName = new FileInfo(filepath).Name;
-                                        mpc.Add(bac, new FileInfo(filepath).Name);
-                                    }
-                                }
-                                res = await client.SendAsync(
-                                    (new HttpRequestMessage(method, uri)
-                                    {
-                                        Content = mpc
-                                    })
-                                );
-                                break;
-                            default:
-                                res = await client.SendAsync((new HttpRequestMessage(method, uri)));
-                                break;
-                        }
-                        if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
-                        {
-                            reStream = res.Content.ReadAsByteArrayAsync().Result;
-                            htmlString = Unzip(reStream);
-                        }
-                        else
-                        {
-                            htmlString = res.Content.ReadAsStringAsync().Result;
-                        }
-                        try
-                        {
-                            setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
-                        }
-                        catch
-                        { }
-                        res.Headers.ToList().ForEach((i) =>
-                        {
-                            httpResponseHeaders.Add(i.Key, i.Value);
-                        });
-                        res.Content.Headers.ToList().ForEach((i) =>
-                        {
-                            httpResponseHeaders.Add(i.Key, i.Value);
-                        });
-                    }
-                    responseCookies = handle.CookieContainer.GetCookies(new Uri(uri));
-                    rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
-                    if (!String.IsNullOrEmpty(htmlString))
-                    {
-                        dom = DOMParser(htmlString);
-                        retObj.HtmlDocument = dom;
-                    }
-                    retObj.HttpResponseHeaders = httpResponseHeaders;
-                    retObj.HttpResponseMessage = res;
-                    break;
-                case "PUT":
-                    if (String.IsNullOrEmpty(contentType))
-                    {
-                        contentType = "application/x-www-form-urlencoded";
-                    }
-                    if (!String.IsNullOrEmpty(body))
-                    {
-                        res = await client.SendAsync(
-                            (new HttpRequestMessage(method, uri)
-                            {
-                                Content = (new StringContent(body, Encoding.UTF8, contentType))
-                            })
-                        );
-                        if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
-                        {
-                            reStream = res.Content.ReadAsByteArrayAsync().Result;
-                            htmlString = Unzip(reStream);
-                        }
-                        else
-                        {
-                            htmlString = res.Content.ReadAsStringAsync().Result;
-                        }
-                        try
-                        {
-                            setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
-                        }
-                        catch
-                        { }
-                        res.Headers.ToList().ForEach((i) =>
-                        {
-                            httpResponseHeaders.Add(i.Key, i.Value);
-                        });
-                        res.Content.Headers.ToList().ForEach((i) =>
-                        {
-                            httpResponseHeaders.Add(i.Key, i.Value);
-                        });
-                    }
-                    else
-                    {
+                bool except = false;
+                switch (method.ToString())
+                {
+                    case "DELETE":
                         res = await client.SendAsync((new HttpRequestMessage(method, uri)));
                         if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
                         {
@@ -683,69 +354,402 @@ namespace Execute
                         {
                             httpResponseHeaders.Add(i.Key, i.Value);
                         });
-                    }
-                    responseCookies = handle.CookieContainer.GetCookies(new Uri(uri));
-                    rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
-                    if (!String.IsNullOrEmpty(htmlString))
-                    {
-                        dom = DOMParser(htmlString);
-                        retObj.HtmlDocument = dom;
-                    }
-                    retObj.HttpResponseHeaders = httpResponseHeaders;
-                    retObj.HttpResponseMessage = res;
-                    break;
-                case "TRACE":
-                    res = await client.SendAsync((new HttpRequestMessage(method, uri)));
-                    if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
-                    {
-                        reStream = res.Content.ReadAsByteArrayAsync().Result;
-                        htmlString = Unzip(reStream);
-                    }
-                    else
-                    {
-                        htmlString = res.Content.ReadAsStringAsync().Result;
-                    }
-                    try
-                    {
-                        setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
-                    }
-                    catch
-                    { }
-                    res.Headers.ToList().ForEach((i) =>
-                    {
-                        httpResponseHeaders.Add(i.Key, i.Value);
-                    });
-                    res.Content.Headers.ToList().ForEach((i) =>
-                    {
-                        httpResponseHeaders.Add(i.Key, i.Value);
-                    });
-                    responseCookies = handle.CookieContainer.GetCookies(new Uri(uri));
-                    rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
-                    if (!String.IsNullOrEmpty(htmlString))
-                    {
-                        dom = DOMParser(htmlString);
-                        retObj.HtmlDocument = dom;
-                    }
-                    retObj.HttpResponseHeaders = httpResponseHeaders;
-                    retObj.HttpResponseMessage = res;
-                    break;
-            }
-            if (!String.IsNullOrEmpty(htmlString))
-            {
-                retObj.ResponseText = htmlString;
-            }
-            retObj.CookieCollection = rCookies;
-            return retObj;
+                        responseCookies = handle.CookieContainer.GetCookies(new Uri(uri));
+                        rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
+                        if (!String.IsNullOrEmpty(htmlString))
+                        {
+                            dom = DOMParser(htmlString);
+                            retObj.HtmlDocument = dom;
+                        }
+                        retObj.HttpResponseHeaders = httpResponseHeaders;
+                        retObj.HttpResponseMessage = res;
+                        break;
+                    case "GET":
+                        res = await client.SendAsync((new HttpRequestMessage(method, uri)));
+                        if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
+                        {
+                            reStream = res.Content.ReadAsByteArrayAsync().Result;
+                            htmlString = Unzip(reStream);
+                        }
+                        else
+                        {
+                            try
+                            {
+                                htmlString = res.Content.ReadAsStringAsync().Result;
+                            }
+                            catch
+                            {
+                                except = true;
+                            }
+                            if (except)
+                            {
+                                var responseStream = await res.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                                using (var sr = new StreamReader(responseStream, Encoding.UTF8))
+                                {
+                                    htmlString = await sr.ReadToEndAsync().ConfigureAwait(false);
+                                }
+                            }
+
+                        }
+                        try
+                        {
+                            setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
+                        }
+                        catch
+                        { }
+                        res.Headers.ToList().ForEach((i) =>
+                        {
+                            httpResponseHeaders.Add(i.Key, i.Value);
+                        });
+                        res.Content.Headers.ToList().ForEach((i) =>
+                        {
+                            httpResponseHeaders.Add(i.Key, i.Value);
+                        });
+                        responseCookies = handle.CookieContainer.GetCookies(new Uri(uri));
+                        rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
+                        if (!String.IsNullOrEmpty(htmlString))
+                        {
+                            dom = DOMParser(htmlString);
+                            retObj.HtmlDocument = dom;
+                        }
+                        retObj.HttpResponseHeaders = httpResponseHeaders;
+                        retObj.HttpResponseMessage = res;
+                        break;
+                    case "HEAD":
+                        res = await client.SendAsync((new HttpRequestMessage(method, uri)));
+                        try
+                        {
+                            setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
+                        }
+                        catch
+                        { }
+                        res.Headers.ToList().ForEach((i) =>
+                        {
+                            httpResponseHeaders.Add(i.Key, i.Value);
+                        });
+                        res.Content.Headers.ToList().ForEach((i) =>
+                        {
+                            httpResponseHeaders.Add(i.Key, i.Value);
+                        });
+                        responseCookies = handle.CookieContainer.GetCookies(new Uri(uri));
+                        rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
+                        retObj.HttpResponseHeaders = httpResponseHeaders;
+                        retObj.HttpResponseMessage = res;
+                        break;
+                    case "OPTIONS":
+                        res = await client.SendAsync((new HttpRequestMessage(method, uri)));
+                        if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
+                        {
+                            reStream = res.Content.ReadAsByteArrayAsync().Result;
+                            htmlString = Unzip(reStream);
+                        }
+                        else
+                        {
+                            htmlString = res.Content.ReadAsStringAsync().Result;
+                        }
+                        try
+                        {
+                            setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
+                        }
+                        catch
+                        { }
+                        res.Headers.ToList().ForEach((i) =>
+                        {
+                            httpResponseHeaders.Add(i.Key, i.Value);
+                        });
+                        res.Content.Headers.ToList().ForEach((i) =>
+                        {
+                            httpResponseHeaders.Add(i.Key, i.Value);
+                        });
+                        responseCookies = handle.CookieContainer.GetCookies(new Uri(uri));
+                        rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
+                        if (!String.IsNullOrEmpty(htmlString))
+                        {
+                            dom = DOMParser(htmlString);
+                            retObj.HtmlDocument = dom;
+                        }
+                        retObj.HttpResponseHeaders = httpResponseHeaders;
+                        retObj.HttpResponseMessage = res;
+                        break;
+                    case "POST":
+                        if (String.IsNullOrEmpty(contentType))
+                        {
+                            contentType = "application/x-www-form-urlencoded";
+                        }
+                        if (!String.IsNullOrEmpty(body))
+                        {
+                            switch (contentType)
+                            {
+                                case @"application/x-www-form-urlencoded":
+                                    res = await client.SendAsync(
+                                        (new HttpRequestMessage(method, uri)
+                                        {
+                                            Content = (new StringContent(body, Encoding.UTF8, contentType))
+                                        })
+                                    );
+                                    break;
+                                case @"multipart/form-data":
+                                    MultipartFormDataContent mpc = new MultipartFormDataContent("Boundary----" + DateTime.Now.Ticks.ToString("x"));
+                                    if (!String.IsNullOrEmpty(filepath))
+                                    {
+                                        if (File.Exists(filepath))
+                                        {
+                                            string mime = MimeKit.MimeTypes.GetMimeType(filepath);
+                                            ByteArrayContent bac = new ByteArrayContent(File.ReadAllBytes(filepath));
+                                            bac.Headers.Add("Content-Type", mime);
+                                            bac.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("attachment");
+                                            bac.Headers.ContentDisposition.Name = "file";
+                                            bac.Headers.ContentDisposition.FileName = new FileInfo(filepath).Name;
+                                            mpc.Add(bac, new FileInfo(filepath).Name);
+                                        }
+                                    }
+                                    if (!String.IsNullOrEmpty(body))
+                                    {
+                                        StringContent sc = new StringContent(body, Encoding.UTF8, @"application/x-www-form-urlencoded");
+                                        mpc.Add(sc);
+                                    }
+                                    res = await client.SendAsync(
+                                        (new HttpRequestMessage(method, uri)
+                                        {
+                                            Content = mpc
+                                        })
+                                    );
+                                    break;
+                                default:
+                                    res = await client.SendAsync(
+                                        (new HttpRequestMessage(method, uri)
+                                        {
+                                            Content = (new StringContent(body, Encoding.UTF8, contentType))
+                                        })
+                                    );
+                                    break;
+                            }
+                            if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
+                            {
+                                reStream = res.Content.ReadAsByteArrayAsync().Result;
+                                htmlString = Unzip(reStream);
+                            }
+                            else
+                            {
+                                htmlString = res.Content.ReadAsStringAsync().Result;
+                            }
+                            try
+                            {
+                                setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
+                            }
+                            catch
+                            { }
+                            res.Headers.ToList().ForEach((i) =>
+                            {
+                                httpResponseHeaders.Add(i.Key, i.Value);
+                            });
+                            res.Content.Headers.ToList().ForEach((i) =>
+                            {
+                                httpResponseHeaders.Add(i.Key, i.Value);
+                            });
+                        }
+                        else
+                        {
+                            switch (contentType)
+                            {
+                                case @"application/x-www-form-urlencoded":
+                                    res = await client.SendAsync(
+                                        (new HttpRequestMessage(method, uri)
+                                        {
+                                            Content = (new StringContent(String.Empty, Encoding.UTF8, contentType))
+                                        })
+                                    );
+                                    break;
+                                case @"multipart/form-data":
+                                    MultipartFormDataContent mpc = new MultipartFormDataContent("Boundary----" + DateTime.Now.Ticks.ToString("x"));
+                                    if (!String.IsNullOrEmpty(filepath))
+                                    {
+                                        if (File.Exists(filepath))
+                                        {
+                                            string mime = MimeKit.MimeTypes.GetMimeType(filepath);
+                                            ByteArrayContent bac = new ByteArrayContent(File.ReadAllBytes(filepath));
+                                            bac.Headers.Add("Content-Type", mime);
+                                            bac.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("attachment");
+                                            bac.Headers.ContentDisposition.Name = "file";
+                                            bac.Headers.ContentDisposition.FileName = new FileInfo(filepath).Name;
+                                            mpc.Add(bac, new FileInfo(filepath).Name);
+                                        }
+                                    }
+                                    res = await client.SendAsync(
+                                        (new HttpRequestMessage(method, uri)
+                                        {
+                                            Content = mpc
+                                        })
+                                    );
+                                    break;
+                                default:
+                                    res = await client.SendAsync((new HttpRequestMessage(method, uri)));
+                                    break;
+                            }
+                            if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
+                            {
+                                reStream = res.Content.ReadAsByteArrayAsync().Result;
+                                htmlString = Unzip(reStream);
+                            }
+                            else
+                            {
+                                htmlString = res.Content.ReadAsStringAsync().Result;
+                            }
+                            try
+                            {
+                                setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
+                            }
+                            catch
+                            { }
+                            res.Headers.ToList().ForEach((i) =>
+                            {
+                                httpResponseHeaders.Add(i.Key, i.Value);
+                            });
+                            res.Content.Headers.ToList().ForEach((i) =>
+                            {
+                                httpResponseHeaders.Add(i.Key, i.Value);
+                            });
+                        }
+                        responseCookies = handle.CookieContainer.GetCookies(new Uri(uri));
+                        rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
+                        if (!String.IsNullOrEmpty(htmlString))
+                        {
+                            dom = DOMParser(htmlString);
+                            retObj.HtmlDocument = dom;
+                        }
+                        retObj.HttpResponseHeaders = httpResponseHeaders;
+                        retObj.HttpResponseMessage = res;
+                        break;
+                    case "PUT":
+                        if (String.IsNullOrEmpty(contentType))
+                        {
+                            contentType = "application/x-www-form-urlencoded";
+                        }
+                        if (!String.IsNullOrEmpty(body))
+                        {
+                            res = await client.SendAsync(
+                                (new HttpRequestMessage(method, uri)
+                                {
+                                    Content = (new StringContent(body, Encoding.UTF8, contentType))
+                                })
+                            );
+                            if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
+                            {
+                                reStream = res.Content.ReadAsByteArrayAsync().Result;
+                                htmlString = Unzip(reStream);
+                            }
+                            else
+                            {
+                                htmlString = res.Content.ReadAsStringAsync().Result;
+                            }
+                            try
+                            {
+                                setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
+                            }
+                            catch
+                            { }
+                            res.Headers.ToList().ForEach((i) =>
+                            {
+                                httpResponseHeaders.Add(i.Key, i.Value);
+                            });
+                            res.Content.Headers.ToList().ForEach((i) =>
+                            {
+                                httpResponseHeaders.Add(i.Key, i.Value);
+                            });
+                        }
+                        else
+                        {
+                            res = await client.SendAsync((new HttpRequestMessage(method, uri)));
+                            if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
+                            {
+                                reStream = res.Content.ReadAsByteArrayAsync().Result;
+                                htmlString = Unzip(reStream);
+                            }
+                            else
+                            {
+                                htmlString = res.Content.ReadAsStringAsync().Result;
+                            }
+                            try
+                            {
+                                setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
+                            }
+                            catch
+                            { }
+                            res.Headers.ToList().ForEach((i) =>
+                            {
+                                httpResponseHeaders.Add(i.Key, i.Value);
+                            });
+                            res.Content.Headers.ToList().ForEach((i) =>
+                            {
+                                httpResponseHeaders.Add(i.Key, i.Value);
+                            });
+                        }
+                        responseCookies = handle.CookieContainer.GetCookies(new Uri(uri));
+                        rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
+                        if (!String.IsNullOrEmpty(htmlString))
+                        {
+                            dom = DOMParser(htmlString);
+                            retObj.HtmlDocument = dom;
+                        }
+                        retObj.HttpResponseHeaders = httpResponseHeaders;
+                        retObj.HttpResponseMessage = res;
+                        break;
+                    case "TRACE":
+                        res = await client.SendAsync((new HttpRequestMessage(method, uri)));
+                        if (res.Content.Headers.ContentEncoding.ToString().ToLower().Equals("gzip"))
+                        {
+                            reStream = res.Content.ReadAsByteArrayAsync().Result;
+                            htmlString = Unzip(reStream);
+                        }
+                        else
+                        {
+                            htmlString = res.Content.ReadAsStringAsync().Result;
+                        }
+                        try
+                        {
+                            setCookieValue = res.Headers.GetValues("Set-Cookie").ToList();
+                        }
+                        catch
+                        { }
+                        res.Headers.ToList().ForEach((i) =>
+                        {
+                            httpResponseHeaders.Add(i.Key, i.Value);
+                        });
+                        res.Content.Headers.ToList().ForEach((i) =>
+                        {
+                            httpResponseHeaders.Add(i.Key, i.Value);
+                        });
+                        responseCookies = handle.CookieContainer.GetCookies(new Uri(uri));
+                        rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
+                        if (!String.IsNullOrEmpty(htmlString))
+                        {
+                            dom = DOMParser(htmlString);
+                            retObj.HtmlDocument = dom;
+                        }
+                        retObj.HttpResponseHeaders = httpResponseHeaders;
+                        retObj.HttpResponseMessage = res;
+                        break;
+                }
+                if (!String.IsNullOrEmpty(htmlString))
+                {
+                    retObj.ResponseText = htmlString;
+                }
+                retObj.CookieCollection = rCookies;
+                return retObj;
+            });
         }
     }
     public class HttpRequest
     {
         public static RetObject Send(string uri, HttpMethod method = null, OrderedDictionary headers = null, CookieCollection cookies = null, string contentType = null, string body = null, string filepath = null)
         {
-            Utils utils = new Utils();
-            utils.Ctor();
-            Task<RetObject> r = utils.SendHttp(uri, method, headers, cookies, contentType, body, filepath);
-            return r.Result;
+            Task<RetObject> t = Task.Factory.StartNew(async () =>
+            {
+                Utils utils = new Utils();
+                RetObject r = await utils.SendHttp(uri, method, headers, cookies, contentType, body, filepath);
+                return r;
+            }).Result;
+            return t.Result;
         }
     }
 }
