@@ -14,7 +14,8 @@
     using System.IO;
     using System.IO.Compression;
     using System.Reflection;
-    using HtmlAgilityPack;
+    using AngleSharp;
+    using AngleSharp.Dom;
     public class RetObject
     {
         public string ResponseText
@@ -32,7 +33,7 @@
             get;
             set;
         }
-        public HtmlDocument HtmlDocument
+        public IDocument HtmlDocument
         {
             get;
             set;
@@ -59,11 +60,10 @@
                 }
             };
         }
-        private static HtmlDocument DOMParser(string responseText)
+        private static IDocument DomParser(string responseText)
         {
-            HtmlDocument htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(responseText);
-            return htmlDoc;
+            IDocument dom = DOMParser.GetDomDocument(responseText);
+            return dom;
         }
         private static CookieCollection SetCookieParser(List<string> setCookie, CookieCollection cooks, CookieCollection initCookies)
         {
@@ -261,7 +261,7 @@
                 CookieCollection rCookies = new CookieCollection();
                 List<string> setCookieValue = new List<string>();
                 CookieContainer coo = new CookieContainer();
-                HtmlDocument dom;
+                IDocument dom;
                 string htmlString = String.Empty;
                 if (method == null)
                 {
@@ -358,7 +358,7 @@
                         rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
                         if (!String.IsNullOrEmpty(htmlString))
                         {
-                            dom = DOMParser(htmlString);
+                            dom = DomParser(htmlString);
                             retObj.HtmlDocument = dom;
                         }
                         retObj.HttpResponseHeaders = httpResponseHeaders;
@@ -409,7 +409,7 @@
                         rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
                         if (!String.IsNullOrEmpty(htmlString))
                         {
-                            dom = DOMParser(htmlString);
+                            dom = DomParser(htmlString);
                             retObj.HtmlDocument = dom;
                         }
                         retObj.HttpResponseHeaders = httpResponseHeaders;
@@ -465,7 +465,7 @@
                         rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
                         if (!String.IsNullOrEmpty(htmlString))
                         {
-                            dom = DOMParser(htmlString);
+                            dom = DomParser(htmlString);
                             retObj.HtmlDocument = dom;
                         }
                         retObj.HttpResponseHeaders = httpResponseHeaders;
@@ -614,7 +614,7 @@
                         rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
                         if (!String.IsNullOrEmpty(htmlString))
                         {
-                            dom = DOMParser(htmlString);
+                            dom = DomParser(htmlString);
                             retObj.HtmlDocument = dom;
                         }
                         retObj.HttpResponseHeaders = httpResponseHeaders;
@@ -688,7 +688,7 @@
                         rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
                         if (!String.IsNullOrEmpty(htmlString))
                         {
-                            dom = DOMParser(htmlString);
+                            dom = DomParser(htmlString);
                             retObj.HtmlDocument = dom;
                         }
                         retObj.HttpResponseHeaders = httpResponseHeaders;
@@ -723,7 +723,7 @@
                         rCookies = SetCookieParser(setCookieValue, responseCookies, cookies);
                         if (!String.IsNullOrEmpty(htmlString))
                         {
-                            dom = DOMParser(htmlString);
+                            dom = DomParser(htmlString);
                             retObj.HtmlDocument = dom;
                         }
                         retObj.HttpResponseHeaders = httpResponseHeaders;
@@ -741,6 +741,34 @@
     }
     public class HttpRequest
     {
+        public HttpRequest()
+        {
+            System.AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                string resourceName = new AssemblyName(args.Name).Name + ".dll";
+                string resource = Array.Find(this.GetType().Assembly.GetManifestResourceNames(), element => element.EndsWith(resourceName));
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+                {
+                    Byte[] assemblyData = new Byte[stream.Length];
+                    stream.Read(assemblyData, 0, assemblyData.Length);
+                    return Assembly.Load(assemblyData);
+                }
+            };
+        }
+        static HttpRequest()
+        {
+            System.AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                string resourceName = new AssemblyName(args.Name).Name + ".dll";
+                string resource = Array.Find(typeof(HttpRequest).Assembly.GetManifestResourceNames(), element => element.EndsWith(resourceName));
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+                {
+                    Byte[] assemblyData = new Byte[stream.Length];
+                    stream.Read(assemblyData, 0, assemblyData.Length);
+                    return Assembly.Load(assemblyData);
+                }
+            };
+        }
         public static RetObject Send(string uri, HttpMethod method = null, OrderedDictionary headers = null, CookieCollection cookies = null, string contentType = null, string body = null, string filepath = null)
         {
             Task<RetObject> t = Task.Factory.StartNew(async () =>
@@ -750,6 +778,33 @@
                 return r;
             }).Result;
             return t.Result;
+        }
+    }
+    public class DOMParser
+    {
+        static DOMParser()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                string resourceName = new AssemblyName(args.Name).Name + ".dll";
+                string resource = Array.Find(typeof(DOMParser).Assembly.GetManifestResourceNames(), element => element.EndsWith(resourceName));
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+                {
+                    Byte[] assemblyData = new Byte[stream.Length];
+                    stream.Read(assemblyData, 0, assemblyData.Length);
+                    return Assembly.Load(assemblyData);
+                }
+            };
+        }
+        public static IDocument GetDomDocument(string HtmlString)
+        {
+            Task<IDocument> doc = Task.Factory.StartNew(async () =>
+            {
+                IBrowsingContext context = BrowsingContext.New(Configuration.Default);
+                IDocument d = await context.OpenAsync(req => req.Content(HtmlString));
+                return d;
+            }).Result;
+            return doc.Result;
         }
     }
 }

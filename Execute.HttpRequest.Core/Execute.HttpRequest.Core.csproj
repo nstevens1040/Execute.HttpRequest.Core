@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <ApplicationIcon>packageIcon.ico</ApplicationIcon>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>Execute.HttpRequest.Core.2022.04.27.snk</AssemblyOriginatorKeyFile>
@@ -21,13 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="lib\HtmlAgilityPack.dll" />
-    <None Remove="lib\HtmlAgilityPack.XML" />
+    <None Remove="lib\AngleSharp.dll" />
+    <None Remove="lib\AngleSharp.xml" />
     <None Remove="lib\Microsoft.AspNetCore.StaticFiles.xml" />
     <None Remove="lib\MimeKit.dll" />
     <None Remove="lib\MimeKit.pdb" />
+    <None Remove="lib\MimeKit.xml" />
     <None Remove="lib\mshtml.dll" />
-    <None Remove="lib\System.Web.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,22 +35,40 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="lib\HtmlAgilityPack.dll" />
-    <EmbeddedResource Include="lib\HtmlAgilityPack.XML" />
+    <EmbeddedResource Include="lib\AngleSharp.dll" />
+    <EmbeddedResource Include="lib\AngleSharp.xml" />
+    <EmbeddedResource Include="lib\Microsoft.AspNetCore.StaticFiles.xml" />
     <EmbeddedResource Include="lib\MimeKit.dll" />
+    <EmbeddedResource Include="lib\MimeKit.xml" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>lib\HtmlAgilityPack.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
+    <Reference Include="AngleSharp">
+      <HintPath>lib\AngleSharp.dll</HintPath>
+      <Private>False</Private>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="MimeKit">
       <HintPath>lib\MimeKit.dll</HintPath>
       <CopyLocal>False</CopyLocal>
       <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
