@@ -15,11 +15,11 @@ deploy:
     artifact: /.nupkg/
     username: nstevens1040
     api_key:
-      secure: f+MLRpFFOj9kyNxbFyIt2n5I/dR48bmJ6qXRB/ageJ/18o61FDhu61IZgwk9KfqD
+        secure: 1fo4bhFuqGYKGzv2VK9P/beOi1S7DxBO+9Wg98pkKiOxNWPE/p4Fb9sPWk3qhLth
   - provider: GitHub
-    tag: v1.0.1
-    release: v1.0.1 stable
+    tag: v1.0.2
+    release: v1.0.2 stable
     auth_token:
-      secure: ElzOGqa44YRqwJ9jKgjBNDbPEmxb1Mg3I+0TxsPQg8OdUSOA8T8DwkwoKofTXMQT
+        secure: AuaSQt4XLBIRQpGmBQYXUJar/SJCiwMKu+5u7pQkIjXQDGs8iQni13qvBuwdDlw1
     draft: false
     prerelease: false

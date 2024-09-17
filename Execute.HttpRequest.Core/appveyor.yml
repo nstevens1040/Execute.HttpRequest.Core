@@ -22,7 +22,7 @@ deploy:
     tag: v1.0.2
     release: v1.0.2 stable
     auth_token:
-        secure: 1fo4bhFuqGYKGzv2VK9P/beOi1S7DxBO+9Wg98pkKiOxNWPE/p4Fb9sPWk3qhLth
+        secure: AuaSQt4XLBIRQpGmBQYXUJar/SJCiwMKu+5u7pQkIjXQDGs8iQni13qvBuwdDlw1
     # auth_token:
     #   secure: ElzOGqa44YRqwJ9jKgjBNDbPEmxb1Mg3I+0TxsPQg8OdUSOA8T8DwkwoKofTXMQT
     draft: false
