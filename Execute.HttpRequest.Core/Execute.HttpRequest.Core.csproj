@@ -1,19 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ApplicationIcon>packageIcon.ico</ApplicationIcon>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>Execute.HttpRequest.Core.2022.04.27.snk</AssemblyOriginatorKeyFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>nstevens1040</Authors>
     <Description>.NET Core class library used the send HTTP requests and parse the response.</Description>
-    <Copyright>Copyright © nstevens1040 2022</Copyright>
+    <Copyright>Copyright © nstevens1040 2026</Copyright>
     <PackageProjectUrl>https://github.com/nstevens1040/Execute.HttpRequest.Core</PackageProjectUrl>
     <PackageIcon>packageIcon.png</PackageIcon>
     <RepositoryUrl>https://github.com/nstevens1040/Execute.HttpRequest.Core.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>http-request;http-response;http;https;http-client;dotnet-core;class-library;csharp;http-get;http-post;http-put;http-delete;http-trace;cookies</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <AssemblyVersion>1.0.3</AssemblyVersion>
+    <FileVersion>1.0.3</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,6 +43,13 @@
     <EmbeddedResource Include="lib\Microsoft.AspNetCore.StaticFiles.xml" />
     <EmbeddedResource Include="lib\MimeKit.dll" />
     <EmbeddedResource Include="lib\MimeKit.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

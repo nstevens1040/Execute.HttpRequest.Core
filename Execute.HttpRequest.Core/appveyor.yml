@@ -19,8 +19,8 @@ deploy:
     # api_key:
     #   secure: f+MLRpFFOj9kyNxbFyIt2n5I/dR48bmJ6qXRB/ageJ/18o61FDhu61IZgwk9KfqD
   - provider: GitHub
-    tag: v1.0.2
-    release: v1.0.2 stable
+    tag: v1.0.3
+    release: v1.0.3 stable
     auth_token:
         secure: AuaSQt4XLBIRQpGmBQYXUJar/SJCiwMKu+5u7pQkIjXQDGs8iQni13qvBuwdDlw1
     # auth_token:
