@@ -15,8 +15,10 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>http-request;http-response;http;https;http-client;dotnet-core;class-library;csharp;http-get;http-post;http-put;http-delete;http-trace;cookies</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.0.3</AssemblyVersion>
-    <FileVersion>1.0.3</FileVersion>
+	<Version>1.0.4</Version>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
+	<FileVersion>1.0.4.0</FileVersion>
+	<PackageVersion>1.0.4</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
